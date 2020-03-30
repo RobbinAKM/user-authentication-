@@ -61,4 +61,46 @@ router.get('/contact', function(req, res, next) {
   return res.render('contact', { title: 'Contact' });
 });
 
+//GET login
+router.get('/login', function(req, res, next) {
+  return res.render('login', { title: 'Login' });
+});
+
+//POST login data
+router.post('/login', function(req, res, next) {
+if(req.body.email && req.body.password){
+  User.authenticate(req.body.email , req.body.password ,function(err,user){
+   if(err || !user ){
+     var err = new Error('wrong email or password');
+     err.status=401;
+     return next(err);
+   }else {
+     req.session.userId = user._id;
+     return res.redirect('/profile');
+   }
+  });
+}else {
+var err = new Error('Email and password must be correctly flled');
+err.status=401;
+ return next(err);
+ }
+});
+
+//GET profile
+router.get('/profile', function(req, res, next) {
+  if (! req.session.userId ) {
+    var err = new Error("You are not authorized to view this page.");
+    err.status = 403;
+    return next(err);
+  }
+  User.findById(req.session.userId)
+      .exec(function (error, user) {
+        if (error) {
+          return next(error);
+        } else {
+          return res.render('profile', { title: 'Profile', name: user.name, favorite: user.favoriteBook });
+        }
+      });
+});
+
 module.exports = router;

@@ -1,5 +1,5 @@
 {
-  "name": "treehouse-express-auth",
+  "name": "clear",
   "version": "1.0.0",
   "description": "A project for learning how to add authentication to a web application.",
   "author": "Treehouse Island, Inc.",
@@ -16,5 +16,15 @@
     "nodemon": "^2.0.2",
     "pug": "^2.0.0-beta2"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobbinAKM/user-authentication-.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RobbinAKM/user-authentication-/issues"
+  },
+  "homepage": "https://github.com/RobbinAKM/user-authentication-#readme"
 }
