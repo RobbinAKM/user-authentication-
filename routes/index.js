@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var mid= require('../middleware');
 
 // GET /register
-router.get('/register', function(req, res, next) {
+router.get('/register',mid.loggedOut, function(req, res, next) {
   return res.render('register', { title: 'Sign Up' });
 });
 
@@ -35,7 +36,7 @@ router.post('/register', function(req, res, next) {
         if (error) {
           return next(error);
         } else {
-          return res.redirect('/profile');
+          return res.redirect('/signupfinish');
         }
       });
 
@@ -46,13 +47,18 @@ router.post('/register', function(req, res, next) {
     }
 })
 
+//GET sign up finished
+router.get('/signupfinish',mid.loggedOut, function(req, res, next) {
+  return res.render('signupfinish', { title: 'Welcome' });
+});
+
 // GET /
 router.get('/', function(req, res, next) {
   return res.render('index', { title: 'Home' });
 });
 
 // GET /about
-router.get('/about', function(req, res, next) {
+router.get('/about',mid.requiresLogin, function(req, res, next) {
   return res.render('about', { title: 'About' });
 });
 
@@ -62,7 +68,7 @@ router.get('/contact', function(req, res, next) {
 });
 
 //GET login
-router.get('/login', function(req, res, next) {
+router.get('/login', mid.loggedOut,function(req, res, next) {
   return res.render('login', { title: 'Login' });
 });
 
@@ -101,6 +107,19 @@ router.get('/profile', function(req, res, next) {
           return res.render('profile', { title: 'Profile', name: user.name, favorite: user.favoriteBook });
         }
       });
+});
+
+//GET logout
+router.get('/logout', function(req, res, next) {
+  if(req.session){
+    req.session.destroy(function(err){
+      if(err){
+        next(err);
+      }else {
+        return res.redirect('/');
+      }
+    });
+  }
 });
 
 module.exports = router;
